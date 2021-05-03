@@ -124,7 +124,6 @@ function createDisplay(metadataItem){
     menu.selectAll("#meta-info").remove();
     //Insert Values
     Object.entries(metadataItem).forEach(function([key, value]){
-        console.log(`the value is: ${value}`);
         menu.append("p")
         .text(`${key}: ${value}`)
         .attr("id", "meta-info");
