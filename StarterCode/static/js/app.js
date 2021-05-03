@@ -1,15 +1,10 @@
 const file = "samples.json";
 
-// Variables
-let names;
-let metadata;
-let samples;
-
 // Read the JSON file & populate the dropdown
 function startFile(){
     d3.json(file).then(function(data){
         //console.log(data);
-        names = data.names;
+        let names = data.names;
         // Create the dropdown options
         let menu = d3.select("#selDataset");
         names.forEach((element) => {
@@ -17,6 +12,15 @@ function startFile(){
             .text(element)
             .attr("value", element);
         });
+
+        //Create default graphs & display
+        let default_sample = data.samples.slice(0,1)[0];
+        let default_metadata = data.metadata.slice(0,1)[0];
+        createHorizontalChart(default_sample);
+        createBubbleChart(default_sample);
+        createDisplay(default_metadata);
+        
+
     });
 }
 
@@ -24,6 +28,7 @@ function updateInformation(nameID){
     d3.json(file).then(function(data){
         console.log(data);
         
+        // Create the bar and bubble charts based on the selected ID
         let samples = data.samples;
         samples.forEach((sample) =>{
             if (sample["id"] === nameID) {
@@ -32,6 +37,8 @@ function updateInformation(nameID){
 
             }
         });
+
+        // Display metadata based on the selected ID
 
         let metadata = data.metadata;
         metadata.forEach((metadataItem) =>{
@@ -42,7 +49,6 @@ function updateInformation(nameID){
 
     });
 }
-
 
 
 function createHorizontalChart(sample_data){
@@ -82,7 +88,6 @@ function createHorizontalChart(sample_data){
 }
 
 function createBubbleChart(sample_data){
-    console.log("Bubble");
     console.log(sample_data);
     let bubble_data = [{
         x: sample_data["otu_ids"],
@@ -117,7 +122,9 @@ function createDisplay(metadataItem){
     let menu = d3.select("#sample-metadata");
     //Erase previous data
     menu.selectAll("#meta-info").remove();
+    //Insert Values
     Object.entries(metadataItem).forEach(function([key, value]){
+        console.log(`the value is: ${value}`);
         menu.append("p")
         .text(`${key}: ${value}`)
         .attr("id", "meta-info");
@@ -131,12 +138,6 @@ function optionChanged(nameID){
     updateInformation(nameID);
 }
 
-
-
 startFile();
 
-//Event Listener for 
 
-//createDropdown(bellyData.names);
-// const dataPromise = d3.json(file);
-// console.log("Data promise: ", dataPromise);
